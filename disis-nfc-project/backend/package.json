@@ -1,0 +1,27 @@
+{
+  "name": "disis-dispatch-service",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "test:concurrency": "node src/tests/concurrency-test.js",
+    "test:stress": "tsx src/tests/stress-test.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "axios": "^1.12.2",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "socket.io": "^4.8.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.2",
+    "tsx": "^4.20.6"
+  }
+}

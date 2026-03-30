@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PrepaidWallet {
+  id           String        @id @default(uuid())
+  nfcUid       String        @unique // El ID del brazalete
+  externalId   String        @unique // El ID de la venta en Disis
+  customerName String?
+  isActive     Boolean       @default(true)
+
+  items        WalletItem[]
+  logs         DispatchLog[]
+  createdAt    DateTime      @default(now())
+}
+
+model WalletItem {
+  id             String        @id @default(uuid())
+  productName    String        // Ej: "Caja de Cerveza"
+  sku            String        // Para cruzar con Disis
+  unitPrice      Float         @default(3.5)
+  totalQuantity  Int           // Lo que compró
+  servedQuantity Int           @default(0) // Lo que ya retiró
+  wallet         PrepaidWallet @relation(fields: [walletId], references: [id])
+  walletId       String
+}
+
+model DispatchLog {
+  id         String        @id @default(uuid())
+  walletId   String
+  wallet     PrepaidWallet @relation(fields: [walletId], references: [id])
+  pointId    String        // Cuál de los 10 puntos fue
+  productSku String
+  quantity   Int
+  createdAt  DateTime      @default(now())
+}
+
+model DispatchPoint {
+  id            String   @id @default(uuid())
+  pointId       String   @unique
+  name          String
+  isActive      Boolean  @default(true)
+  lastHeartbeat DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

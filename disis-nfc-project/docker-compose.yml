@@ -1,0 +1,28 @@
+services:
+  dispatch-service:
+    build:
+      context: ./backend
+    container_name: disis-dispatch-service
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: file:/app/prisma/dev.db
+      PORT: 3001
+      INTERNAL_API_KEY: DEMO_KEY_123
+    volumes:
+      - dispatch_service_data:/app/prisma
+
+  dispatch-ui:
+    build:
+      context: ./mobile
+    container_name: disis-dispatch-ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dispatch-service
+    environment:
+      NEXT_PUBLIC_DISPATCH_API_URL: http://localhost:3001
+      NEXT_PUBLIC_INTERNAL_API_KEY: DEMO_KEY_123
+
+volumes:
+  dispatch_service_data:
